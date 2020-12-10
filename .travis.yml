@@ -99,28 +99,8 @@ jobs:
           apk update && apk add meson wayland-dev musl-dev wayland-protocols gcc
           meson build && ninja -C build && meson test -C build
           ' | docker run -i -v "$PWD":/wob -w /wob alpine:3.12
-    - name: Test Archlinux
-      arch: ppc64le
-      stage: test
-      services:
-        - docker
-      script:
-        - |
-          printf 'set -eu
-          pacman -Sy --noconfirm gcc pkgconf meson wayland wayland-protocols
-          meson build && ninja -C build && meson test -C build
-          ' | docker run -i -v "$PWD":/wob -w /wob archlinux:latest
-    - name: Test FreeBSD
-      arch: ppc64le
-      stage: test
-      os: freebsd
-      language: c
-      compiler: clang
-      script:
-        - sudo pkg install -y meson pkgconf wayland wayland-protocols
-        # Fix for https://reviews.freebsd.org/D25554
-        - sed -i '' 's/_POSIX_C_SOURCE 199506L/_POSIX_C_SOURCE 200112L/' log.c
-        - meson build && ninja -C build && meson test -C build
+    # Archlinux not supported on ppc64le. Hence not including it.
+    # freebsd not supported on ppc64le. Hence not including it.
     - name: Coding style check
       arch: ppc64le
       stage: test
